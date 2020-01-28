@@ -1,0 +1,13 @@
+package com.app.dao;
+
+import java.util.List;
+
+import com.app.pojos.Leave;
+
+public interface ILeaveDao 
+{
+	 public List<Leave> getAllLeavesOfUser(String username);
+	
+	 public List<Leave> getAllActiveLeaves();
+	 
+}

@@ -1,0 +1,29 @@
+package com.app.dao;
+
+import java.util.List;
+
+import com.app.pojos.User;
+
+public interface IUserDao 
+{
+	public User login(User user);
+	
+	public User findByEmail(User user);
+	
+	public int generateOtp();
+	
+	public Integer registerUser(User user,int project_id,int department_id);
+	
+	public List<User> getAllUsers();
+	
+	User getUserDetails(int id);
+	
+	User updateDetails(User u);
+	
+	public User validateUser(String email,String pass);
+
+	void resetPassword(String password, String email_id);
+
+	
+	
+}

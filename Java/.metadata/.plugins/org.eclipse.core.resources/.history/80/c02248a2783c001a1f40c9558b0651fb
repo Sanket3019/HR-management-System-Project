@@ -1,0 +1,41 @@
+package com.app.dao;
+
+import java.util.List;
+
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.app.pojos.Leave;
+
+@Service
+@Transactional
+public class LeaveDaoImpl implements ILeaveDao 
+{
+
+	@Autowired
+	private SessionFactory sf;
+	
+	@Override
+	public List<Leave> getAllLeavesOfUser(String username)
+	{
+		
+		return null;
+	}
+
+	@Override
+	public List<Leave> getAllActiveLeaves() 
+	{
+		
+		return null;
+	}
+
+	@Override
+	public void updateLeaveDetails(Leave leave) 
+	{
+		sf.getCurrentSession().save(leave);
+	}
+
+	
+}

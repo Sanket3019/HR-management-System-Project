@@ -1,0 +1,80 @@
+package com.app.dao;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.app.pojos.Department;
+import com.app.pojos.Leave;
+import com.app.pojos.Project;
+import com.app.pojos.User;
+import com.fasterxml.jackson.databind.ser.std.StdArraySerializers.DoubleArraySerializer;
+
+@Service
+@Transactional
+public class LeaveDaoImpl implements ILeaveDao
+{
+
+	@Autowired
+	private SessionFactory sf;
+	
+	@Override
+	public List<Leave> getAllLeaves() 
+	{
+		String jpql = "select l from Leave l join fetch l.user";
+		return sf.getCurrentSession().createQuery(jpql, Leave.class).getResultList();
+	}
+
+	@Override
+	public Integer applyLeave(Leave leave, int u_id) 
+	{
+		//int duration = leave.getToDate() - leave.getFromDate();
+		
+		//d1 = leave.getFromDate();
+		//localDate d2 = LocalDate.parse(leave.getToDate(),DateTimeFormatter.ISO_LOCAL_DATE);
+	
+		//Duration duration = Duration.between(leave.getFromDate(),leave.getToDate());
+		
+		
+		//int duration = leave.getFromDate() - leave.getToDate();
+		
+		long diffInMillies = Math.abs(leave.getFromDate().getTime() - leave.getToDate().getTime());
+	    long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+	    int duration = (int) diff;
+		System.out.println(duration);
+		
+		leave.setDuration(duration + 1);
+		leave.setActive(true);
+		int id = (Integer)sf.getCurrentSession().save(leave);
+		
+		Leave l=sf.getCurrentSession().get(Leave.class,id);
+		
+		User u=sf.getCurrentSession().get(User.class,u_id);
+		
+		l.setUser(u);
+		
+		return u.getId();
+	}
+
+	@Override
+	public List<Leave> getAllActiveLeaves()
+	{
+		String jpql = "select al from Leave left outer join fetch al.user where active=true";
+		return sf.getCurrentSession().createQuery(jpql, Leave.class).getResultList();
+	}
+
+	@Override
+	public List<Leave> getAllLeavesOfUser(int u_id) 
+	{
+		String jpql = "select l from Leave l join fetch l.user where l.u_id =:u_id";
+		return sf.getCurrentSession().createQuery(jpql, Leave.class).setParameter("u_id",u_id).getResultList();
+	}
+	
+}

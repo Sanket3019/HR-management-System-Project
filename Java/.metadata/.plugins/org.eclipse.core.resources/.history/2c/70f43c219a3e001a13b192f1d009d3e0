@@ -1,0 +1,13 @@
+package com.app.service;
+
+import com.app.pojos.User;
+
+public interface IUserOtp 
+
+{
+	
+
+	public int generatorOTP();
+	public void setPassword(String getPassword, String getEmail);
+
+}
